@@ -5,6 +5,8 @@ import java.util.*;
 public class Prompt extends TimerTask {
     public Timer myTimer = null;
     public boolean prompting = false;
+    public long promptGap;
+    public long lastPromptTime;
 
     public void run() {
         prompting = true;
@@ -32,6 +34,7 @@ public class Prompt extends TimerTask {
         else{
             System.out.println("Wrong input.");
         }
+        lastPromptTime = System.currentTimeMillis();
         prompting = false;
         return;
     }

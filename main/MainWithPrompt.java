@@ -22,11 +22,13 @@ public class MainWithPrompt {
     }
 
     public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
         int test = Integer.parseInt(args[0]);
 
         Prompt prompt = new Prompt();
         prompt.myTimer = new Timer();
         prompt.myTimer.scheduleAtFixedRate(prompt, 2000, 4000);
+        prompt.promptGap = 4000;
 
         try {
             ServerSocket manager = new ServerSocket(2323);
@@ -54,22 +56,30 @@ public class MainWithPrompt {
 
             while (true) {
                 if (inputF.available() > 0 && resultOfF == -1) {
-                    resultOfF = inputF.readByte();
-                    if (resultOfF == 0) {
-                        resultsInZero("F"); //! interrupts prompt
-                        break;
+                    if (!prompt.prompting) {
+                        long timeSpent = System.currentTimeMillis() - startTime;
+                        resultOfF = inputF.readByte();
+                        if (resultOfF == 0) {
+                            resultsInZero("F"); //! interrupts prompt
+                            break;
+                        }
                     }
                 }
 
                 if (inputG.available() > 0 && resultOfG == -1) {
-                    resultOfG = inputG.readByte();
-                    if (resultOfG == 0) {
-                        resultsInZero("G"); //! interrupts prompt
-                        break;
+                    if (!prompt.prompting) {
+                        resultOfG = inputG.readByte();
+                        if (resultOfG == 0) {
+                            resultsInZero("G"); //! interrupts prompt
+                            break;
+                        }
                     }
                 }
 
-                if (resultOfF > 0 && resultOfG > 0) break;
+                if (resultOfF > 0 && resultOfG > 0) {
+
+                    break;
+                }
                 //System.out.println("\nF: " + resultOfF + "\n");
                 //System.out.println("\nG: " + resultOfG + "\n");
             }
