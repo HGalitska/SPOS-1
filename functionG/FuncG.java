@@ -28,13 +28,16 @@ public class FuncG {
                     output.writeByte(1);
                     break;
                 case 3:
+                    Thread.sleep(1000);
                     while(true);
                 case 4:
                     Thread.sleep(3000);
                     output.writeByte(0);
                     break;
                 case 5:
-                    while(true) {Thread.sleep(1000);}
+                    while(true) {
+                        Thread.sleep(1000);
+                    }
                 case 6:
                     Thread.sleep(1000);
                     output.writeByte(1);

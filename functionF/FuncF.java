@@ -32,12 +32,16 @@ public class FuncF {
                     output.writeByte(0);
                     break;
                 case 4:
+                    Thread.sleep(1000);
                     while(true);
                 case 5:
+                    Thread.sleep(1000);
                     output.writeByte(1);
                     break;
                 case 6:
-                    while(true);
+                    while(true) {
+                        Thread.sleep(1000);
+                    }
             }
 
             output.close();

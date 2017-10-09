@@ -26,13 +26,14 @@ public class Main {
     public static void main(String[] args) {
         int test = Integer.parseInt(args[0]);
         System.out.println("Press '0' at any time to cancel computation.");
+        KeyListener listener = null;
 
         Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
         logger.setLevel(Level.OFF);
         logger.setUseParentHandlers(false);
         try {
             GlobalScreen.registerNativeHook();
-            KeyListener listener = new KeyListener();
+            listener = new KeyListener();
             GlobalScreen.addNativeKeyListener(listener);
         } catch (NativeHookException ex) {
             System.err.println(ex.getMessage());
@@ -77,8 +78,8 @@ public class Main {
                         break;
                     }
                 }
-                //System.out.println("\nF: " + resultOfF + "\n");
-                //System.out.println("\nG: " + resultOfG + "\n");
+                listener.f_is = resultOfF;
+                listener.g_is = resultOfG;
                 if (resultOfF > 0 && resultOfG >0) break;
             }
             System.out.print("\nResult: " + (resultOfF | resultOfG) + "\n");
