@@ -2,17 +2,20 @@ package CancelPrompt;
 
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Prompt extends TimerTask {
     public Timer myTimer = null;
-    public boolean prompting = false;
+    public static AtomicBoolean prompting = new AtomicBoolean(false);
+    public static long lastPromptTime = 5000;
 
-
-    public int f_is;
-    public int g_is;
+    public static int f_is;
+    public static int g_is;
 
     public void run() {
-        prompting = true;
+        if(System.currentTimeMillis() - lastPromptTime > 2000 && prompting.compareAndSet(false, true)) {}
+        else return;
+
         System.out.println("Press: 1 - continue, 2 - continue without prompt, 3 - cancel computation.");
         Scanner sc = new Scanner(System.in);
         if(sc.hasNextInt()){
@@ -43,7 +46,8 @@ public class Prompt extends TimerTask {
             System.out.println("Wrong input.");
         }
 
-        prompting = false;
+        lastPromptTime = System.currentTimeMillis();
+        prompting.set(false);
         return;
     }
 }

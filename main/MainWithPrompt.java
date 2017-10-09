@@ -54,8 +54,7 @@ public class MainWithPrompt {
             int resultOfG = -1;
 
             while (true) {
-                if (inputF.available() > 0 && resultOfF == -1 && !prompt.prompting) {
-                    long timeSpent = System.currentTimeMillis() - startTime;
+                if (inputF.available() > 0 && resultOfF == -1 && Prompt.prompting.compareAndSet(false, prompt.prompting.get())) {
                     resultOfF = inputF.readByte();
                     if (resultOfF == 0) {
                         resultsInZero("F");
@@ -63,15 +62,15 @@ public class MainWithPrompt {
                     }
                 }
 
-                if (inputG.available() > 0 && resultOfG == -1 && !prompt.prompting) {
+                if (inputG.available() > 0 && resultOfG == -1 && Prompt.prompting.compareAndSet(false, prompt.prompting.get())) {
                     resultOfG = inputG.readByte();
                     if (resultOfG == 0) {
                         resultsInZero("G");
                         break;
                     }
                 }
-                prompt.f_is = resultOfF;
-                prompt.g_is = resultOfG;
+                Prompt.f_is = resultOfF;
+                Prompt.g_is = resultOfG;
                 if (resultOfF > 0 && resultOfG > 0) break;
             }
             System.out.print("\nResult: " + (resultOfF | resultOfG) + "\n");
