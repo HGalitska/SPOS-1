@@ -28,7 +28,6 @@ public class MainWithPrompt {
         Prompt prompt = new Prompt();
         prompt.myTimer = new Timer();
         prompt.myTimer.scheduleAtFixedRate(prompt, 2000, 4000);
-        prompt.promptGap = 4000;
 
         try {
             ServerSocket manager = new ServerSocket(2323);

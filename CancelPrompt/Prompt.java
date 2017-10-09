@@ -1,12 +1,13 @@
 package CancelPrompt;
 
+
 import java.util.*;
 
 public class Prompt extends TimerTask {
     public Timer myTimer = null;
     public boolean prompting = false;
-    public long promptGap;
-    public long lastPromptTime;
+
+
     public int f_is;
     public int g_is;
 
@@ -29,6 +30,7 @@ public class Prompt extends TimerTask {
                         System.out.println("We couldn't compute function F so fast. Sorry.");
                     else if (g_is == -1)
                         System.out.println("We couldn't compute function G so fast. Sorry.");
+                    else System.out.println("But result was computed: " + (f_is | g_is));
                     myTimer.cancel();
                     System.exit(0);
                     break;
@@ -40,7 +42,7 @@ public class Prompt extends TimerTask {
         else{
             System.out.println("Wrong input.");
         }
-        lastPromptTime = System.currentTimeMillis();
+
         prompting = false;
         return;
     }
