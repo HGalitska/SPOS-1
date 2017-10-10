@@ -65,6 +65,7 @@ public class Main {
             while(true) {
                 if (inputF.available() > 0 && resultOfF == -1) {
                     resultOfF = inputF.readByte();
+                    listener.f_is = resultOfF;
                     if (resultOfF == 0) {
                         resultsInZero("F");
                         break;
@@ -73,13 +74,13 @@ public class Main {
 
                 if (inputG.available() > 0 && resultOfG == -1) {
                     resultOfG = inputG.readByte();
+                    listener.g_is = resultOfG;
                     if (resultOfG == 0) {
                         resultsInZero("G");
                         break;
                     }
                 }
-                listener.f_is = resultOfF;
-                listener.g_is = resultOfG;
+
                 if (resultOfF > 0 && resultOfG >0) break;
             }
             System.out.print("\nResult: " + (resultOfF | resultOfG) + "\n");

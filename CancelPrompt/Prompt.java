@@ -9,8 +9,8 @@ public class Prompt extends TimerTask {
     public static AtomicBoolean prompting = new AtomicBoolean(false);
     public static long lastPromptTime = 5000;
 
-    public static int f_is;
-    public static int g_is;
+    public static int f_is = -1;
+    public static int g_is = -1;
 
     public void run() {
         if(System.currentTimeMillis() - lastPromptTime > 2000 && prompting.compareAndSet(false, true)) {}
@@ -31,9 +31,9 @@ public class Prompt extends TimerTask {
                     System.out.println("Computation was cancelled.");
                     if (f_is == -1)
                         System.out.println("We couldn't compute function F so fast. Sorry.");
-                    else if (g_is == -1)
+                    if (g_is == -1)
                         System.out.println("We couldn't compute function G so fast. Sorry.");
-                    else System.out.println("But result was computed: " + (f_is | g_is));
+                    if (f_is > 0 && g_is > 0)System.out.println("But result was computed: " + (f_is | g_is));
                     myTimer.cancel();
                     System.exit(0);
                     break;
