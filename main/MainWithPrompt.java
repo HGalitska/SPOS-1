@@ -1,14 +1,14 @@
 package main;
 
-import CancelPrompt.Prompt;
-
 import java.io.*;
 import java.net.*;
-import java.util.Timer;
+import java.util.Scanner;
 
 public class MainWithPrompt {
     public static Process processF;
     public static Process processG;
+    public static long lastPromptTime = 5000;
+    public static boolean isNextPrompt = true;
 
     public static void terminate() {
         processF.destroy();
@@ -21,13 +21,43 @@ public class MainWithPrompt {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
-        long startTime = System.currentTimeMillis();
-        int test = Integer.parseInt(args[0]);
+    public static void prompt(int f_is, int g_is) {
+        System.out.println("Press: 1 - continue, 2 - continue without prompt, 3 - cancel computation.");
+        Scanner sc = new Scanner(System.in);
+        if(sc.hasNextInt()){
+            int i = sc.nextInt();
 
-        Prompt prompt = new Prompt();
-        prompt.myTimer = new Timer();
-        prompt.myTimer.scheduleAtFixedRate(prompt, 2000, 4000);
+            switch (i) {
+                case 1:
+                    break;
+                case 2:
+                    isNextPrompt = false;
+                    return;
+                case 3:
+                    System.out.println("Computation was cancelled.");
+                    if (f_is == -1)
+                        System.out.println("We couldn't compute function F so fast. Sorry.");
+                    if (g_is == -1)
+                        System.out.println("We couldn't compute function G so fast. Sorry.");
+                    if (f_is > 0 && g_is > 0)System.out.println("But result was computed: " + (f_is | g_is));
+                    isNextPrompt = false;
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Wrong input.");
+                    break;
+            }
+        }
+        else{
+            System.out.println("Wrong input.");
+        }
+
+        lastPromptTime = System.currentTimeMillis();
+        return;
+    }
+
+    public static void main(String[] args) {
+        int test = Integer.parseInt(args[0]);
 
         try {
             ServerSocket manager = new ServerSocket(2323);
@@ -56,8 +86,7 @@ public class MainWithPrompt {
             while (true) {
                 if (inputF.available() > 0 && resultOfF == -1) {
                     resultOfF = inputF.readByte();
-                    Prompt.f_is = resultOfF;
-                    if (resultOfF == 0 && !Prompt.prompting.get()) {
+                    if (resultOfF == 0) {
                         resultsInZero("F");
                         break;
                     }
@@ -65,23 +94,23 @@ public class MainWithPrompt {
 
                 if (inputG.available() > 0 && resultOfG == -1) {
                     resultOfG = inputG.readByte();
-                    Prompt.g_is = resultOfG;
-                    if (resultOfG == 0 && !Prompt.prompting.get()) {
+                    if (resultOfG == 0) {
                         resultsInZero("G");
                         break;
                     }
                 }
 
                 if (resultOfF > 0 && resultOfG > 0) break;
+
+                if (isNextPrompt && System.currentTimeMillis() - lastPromptTime >= 2000) {
+                    prompt(resultOfF, resultOfG);
+                }
             }
 
-            while (Prompt.prompting.get()) {}
             System.out.print("\nResult: " + (resultOfF | resultOfG) + "\n");
 
             inputF.close();
             inputG.close();
-
-            prompt.myTimer.cancel();
 
             terminate();
 
